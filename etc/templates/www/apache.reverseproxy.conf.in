@@ -35,3 +35,37 @@ ProxyPassReverse  /     http://${hosts:zope-front}:${ports:zope-front}/VirtualHo
 #RewriteLogLevel 3
 
 </VirtualHost>
+<VirtualHost ${listen}:${port}>
+ServerAdmin     kiorky@localhost
+DocumentRoot    ${buildout:directory}
+ServerName      ${edit-host}
+ErrorLog        ${buildout:directory}/var/log/apache/${edit-host}_log
+TransferLog     ${buildout:directory}/var/log/apache/${edit-host}-access_log
+CustomLog       ${buildout:directory}/var/log/apache/${edit-host}-access_log combined
+DirectoryIndex   index.html index.htm
+<Directory "${buildout:directory}">
+    Options  ExecCGI IncludesNOEXEC FollowSymLinks -Indexes
+    AllowOverride All
+    Order allow,deny
+    Allow from all
+</Directory>
+ProxyRequests off
+<Proxy *>
+  Order allow,deny
+  Allow from all
+</Proxy>
+RewriteEngine  on
+
+ProxyPass         /zmiroot/ http://${hosts:zope-front}:${ports:zope-front}/VirtualHostBase/${scheme}/${edit-host}:${port}/VirtualHostRoot/_vh_zmiroot/ retry=1
+ProxyPassReverse  /zmiroot/ http://${hosts:zope-front}:${ports:zope-front}/VirtualHostBase/${scheme}/${edit-host}:${port}/VirtualHostRoot/_vh_zmiroot/
+
+# supervisor
+ProxyPass         /supervisor/ http://${hosts:supervisor}:${ports:supervisor}/
+ProxyPassReverse  /supervisor/ http://${hosts:supervisor}:${ports:supervisor}/
+
+# /-> vhmonster proxyreverse because of redirects !
+ProxyPass         /     http://${hosts:zope-front}:${ports:zope-front}/VirtualHostBase/${scheme}/${edit-host}:${port}/${v:plonesite}/VirtualHostRoot/ retry=1
+ProxyPassReverse  /     http://${hosts:zope-front}:${ports:zope-front}/VirtualHostBase/${scheme}/${edit-host}:${port}/${v:plonesite}/VirtualHostRoot/
+
+# vim: set ft=xml:
+</VirtualHost>
