@@ -62,4 +62,4 @@ backend zope
   cookie serverid insert indirect
   option httpchk GET /
 
-  server  zope0101 ${hosts:instance}:${ports:instance} cookie z0101 check maxconn 2 maxqueue 50
+  server  zope0101 ${hosts:instance1}:${ports:instance1} cookie z0101 check maxconn 2 maxqueue 50
