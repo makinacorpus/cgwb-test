@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
+    i18n_domain="testcgwb">
+  <!-- Include direct package dependencies -->
+  <genericsetup:registerProfile
+      name="qi"
+      title=" Policy QI"
+      directory="profiles/qi"
+      description="Turn a Plone site into the  QIINFO site."
+      provides="Products.GenericSetup.interfaces.EXTENSION"
+    />
+  <genericsetup:registerProfile
+      name="default"
+      title="testcgwb"
+      directory="profiles/default"
+      description="Install the testcgwb addon on this plone site."
+      provides="Products.GenericSetup.interfaces.EXTENSION"
+    />
+  <genericsetup:registerProfile
+      title="testcgwb uninstall"
+      name="uninstall"
+      description="Uninstall the testcgwb addon on tbis plone site."
+      directory="profiles/uninstall"
+      provides="Products.GenericSetup.interfaces.EXTENSION"
+      for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+      />
+  <genericsetup:importStep
+      name="testcgwb setupVarious"
+      title="various setup for testcgwb "
+      description="description"
+      handler="testcgwb.setuphandlers.setupVarious">
+    <depends name="plone-content"/>
+  </genericsetup:importStep>
+  <!-- migration steps -->
+  <genericsetup:importStep
+      name="testcgwb setupQi"
+      title="Quick Installer products dependencies setup for testcgwb"
+      description="description"
+      handler="testcgwb.setuphandlers.setupQi">
+    <depends name="plone-content"/>
+  </genericsetup:importStep>
+  <!-- -->
+  <utility factory="testcgwb.HiddenProducts" name="testcgwb.hiddenproducts"/>
+  <utility factory="testcgwb.HiddenProfiles" name="testcgwb.hiddenprofiles"/>
+  <include package=".upgrades"/>
+</configure>
