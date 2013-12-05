@@ -61,7 +61,6 @@ SYSTEM ADMINISTRATORS RELATED FILES
     etc/logrotate.d/            -> various logrotate configuration files
     etc/sys/
     |-- cache.cfg        -> Project proxy cache settings (varnish)
-    |-- ha.cfg           -> Project loadbalancer settings
     |-- supervisor.cfg   -> Project production settings for supervision
     |-- system.cfg       -> Project settings for reverse proxies, cron & logrotation
 
@@ -77,7 +76,6 @@ CONFIGURATION TEMPLATES
 ::
 
     etc/templates/
-    |-- ha/balancer.conf.template   -> haproxy template.
     |-- varnish                     -> varnish related templates (binaries helpers & vcl)
     |-- logrotate.conf.template     -> logrotate configuration file template for your Zope logs
     |-- www                         -> templates for www proxies
