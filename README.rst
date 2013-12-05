@@ -60,6 +60,7 @@ SYSTEM ADMINISTRATORS RELATED FILES
     etc/init.d/                 -> various init script (eg supervisor)
     etc/logrotate.d/            -> various logrotate configuration files
     etc/sys/
+    |-- supervisor.cfg   -> Project production settings for supervision
     |-- system.cfg       -> Project settings for reverse proxies, cron & logrotation
 
 We generate two virtualhosts for a cliassical apache or nginxsetup, mostly ready but feel free to copy/adapt.
@@ -76,5 +77,6 @@ CONFIGURATION TEMPLATES
     etc/templates/
     |-- logrotate.conf.template     -> logrotate configuration file template for your Zope logs
     |-- www                         -> templates for www proxies
+    `-- supervisor/supervisor.initd -> template for supervisor init script
 
 .. vim:set ft=rst:
