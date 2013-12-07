@@ -15,7 +15,7 @@ etc/init.d/
 etc/loadbalancing/
 etc/logrotate.conf
 etc/project/kgs.cfg
-etc/project/testcgwb-kgs.cfg
+etc/project/generated-kgs.cfg
 etc/sys/settings-local.cfg
 etc/sys/settings-prod.cfg
 etc/varnish.vcl
