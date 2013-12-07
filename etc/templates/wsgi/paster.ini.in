@@ -85,6 +85,12 @@ qualname = routes.middleware
 propagate = 0
 
 # Handler for printing messages to the console
+[handler_accesslog]
+class = StreamHandler
+args = (sys.stderr,)
+level = INFO
+formatter = generic
+
 [handler_console]
 class = StreamHandler
 args = (sys.stderr,)
