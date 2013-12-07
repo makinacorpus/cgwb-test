@@ -1,0 +1,108 @@
+# WSGI CONFIGURATION FILE
+
+[DEFAULT]
+debug=${instance:debug}
+
+[composite:main]
+use=egg:Paste#urlmap
+/threads/=watch_threads
+/=pmain
+
+[pipeline:pmain]
+pipeline= translogger exc projectapp
+
+[app:watch_threads]
+use=egg:Paste#watch_threads
+
+[filter:translogger]
+use=egg:Paste#translogger
+setup_console_handler = False
+logger_name = wsgi
+
+[filter:debug]
+use=egg:Paste#printdebug
+
+[filter:exc]
+use=egg:WebError#evalerror
+
+[app:projectapp]
+use=egg:${instance:ep}
+zcmls=
+# indicate here full path to zcmls or
+# relative path inside your egg
+pyramid.includes=
+
+# various addons pre configurations
+pyramid.default_locale_name = en
+mako.directories=${instance:egg}:templates
+pyramid.debug_all=${instance:debug}
+#pyramid.debug_authorization=${instance:debug}
+#pyramid.debug_routematch=${instance:debug}
+#pyramid.debug_templates=${instance:debug}
+pyramid.reload_all=${instance:debug}
+#pyramid.reload_assets=${instance:debug}
+#pyramid.reload_resources=${instance:debug}
+#pyramid.reload_templates=${instance:debug}
+pyramid.includes =
+    pyramid_debugtoolbar
+
+#debug toolbar
+debugtoolbar.intercept_exc=${instance:intercept_exc_debug}
+debugtoolbar.eval_exc=${instance:debug}
+debugtoolbar.enabled=${instance:debug}
+
+
+
+
+
+[loggers]
+keys = root,wsgi,routes
+
+[handlers]
+keys = console,accesslog
+
+[formatters]
+keys = generic,accesslog
+
+# Send warnings that are not caught by other loggers to the console
+[logger_root]
+level = NOTSET
+handlers = console
+
+# Send all messages to the 'wsgi' logger to the accesslog and errorlog handlers
+[logger_wsgi]
+level = NOTSET
+handlers = console
+qualname = wsgi
+propagate = 0
+
+# Routes (the URL dispatcher) sends debug information to the 'routes.middleware' logger
+# with DEBUG level.
+[logger_routes]
+level = NOTSET
+handlers = console,fconsole
+qualname = routes.middleware
+propagate = 0
+
+# Handler for printing messages to the console
+[handler_console]
+class = StreamHandler
+args = (sys.stderr,)
+level = INFO
+formatter = generic
+
+# A generic formatter that prints the time, the logger's name, the level and the message
+[formatter_generic]
+format = %(asctime)s %(name)s[%(levelname)s] %(message)s
+
+# A trivial formatter that just passes-through the log message.
+# Translogger already creates Apache-style log messages. No need to change that.
+[formatter_accesslog]
+format = %(message)s
+
+[server:main]
+use=${server}
+host=${host}
+port=${port}
+
+# vim:set et ts=4 sts=4 ft=cfg:

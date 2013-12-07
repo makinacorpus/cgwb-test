@@ -1,46 +1,110 @@
-==============================
-Introduction
-==============================
-
-.. contents::
-
-BUILDOUT FOR testcgwb DOCUMENTATION
 ==============================================================
-INSTALLING THIS PROJECT
------------------------------------------
+pyramid BUILDOUT FOR testcgwb
+==============================================================
+
+WARNING ABOUT BUILOOUT BOOTSTRAP WARNING
+--------------------------------------------
+
+        !!!    Be sure to use zc.buildout >= 1.5.0 or you ll have errors or bugs.    !!!
+
+DEVELOP MODE
+---------------
+To develop your application, run the ``buildout-dev.cfg`` buildout:
+
+  * it comes with development tools.
+  * it configures the instance to be more verbose
+  * it has only one instance and not all the hassles from production.
+
+
+PRODUCTION MODE
+---------------
+To make your application safe for production, run the ``buildout-prod.cfg`` buildout'.
+It extends this one with additionnal crontabs and backup scripts and some additionnal instances creation.
+
+
+BASE BUILDOUTS WHICH DO ONLY AGGREGATE PARTS FROM THERE & THERE
+-------------------------------------------------------------------
 ::
 
-    git clone git@gitorious-git.makina-corpus.net/ testcgwb
-    cd testcgwb
-    sudo apt-get install -y build-essential m4 libtool pkg-config autoconf gettext bzip2 groff man-db automake libsigc++-2.0-dev tcl8.5 git libssl-dev libxml2-dev libxslt1-dev libbz2-dev zlib1g-dev python-setuptools python-dev libjpeg62-dev libreadline-dev python-imaging wv poppler-utils libsqlite0-dev libgdbm-dev libdb-dev tcl8.5-dev tcl8.5-dev tcl8.4 tcl8.4-dev tk8.5-dev libsqlite3-dev
-    python bootstrap.py
-    bin/buildout
+    |-- buildout-dev.cfg                     -> buildout for development
+    |-- buildout-prod.cfg                    -> buildout for production
+    |-- etc/base.cfg                -> The base buildout
 
-Launch
--------
+
+
+PROJECT SETTINGS
+~~~~~~~~~~~~~~~~~~~~~~~~
+- Think you have the most important sections of this buildout configuration in etc/testcgwb.cfg
+Set the project developement  specific settings there
 ::
 
-    bin/pserve --reload etc/instance.ini
-
-Credits
-========
-Companies
----------
-|makinacom|_
-
-  * `Planet Makina Corpus <http://www.makina-corpus.org>`_
-  * `Contact us <mailto:python@makina-corpus.org>`_
-
-.. |makinacom| image:: http://depot.makina-corpus.org/public/logo.gif
-.. _makinacom:  http://www.makina-corpus.com
-
-Authors
-------------
-
-- ubuntu <ubuntu@localhost>  <ubuntu@localhost>
-
-Contributors
------------------
+    etc/project/
+    |-- testcgwb.cfg       -> your project needs (packages, sources, products)
+    |-- sources.cfg          -> externals sources of your project:
+    |                           - Sources not packaged as python eggs.
+    |                           - Eggs Grabbed from svn, add here your develoment eggs.
+    |                           - Links to find distributions.
+    |-- patches.cfg          -> patches used on the project
+    |-- cluster.cfg          -> define new zope instances here & also their FileSystemStorage if any.
+    `-- versions.cfg         -> minimal version pinning for installing your project
 
 
+SYSTEM ADMINISTRATORS RELATED FILES
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+::
 
+    etc/init.d/                 -> various init script (eg supervisor)
+    etc/logrotate.d/            -> various logrotate configuration files
+    etc/sys/
+    |-- high-availability.cfg   -> Project production settings like supervision, loadbalancer and so on
+    |-- maintenance.cfg         -> Project maintenance settings (crons, logs)
+    `-- settings.cfg            -> various settings (crons hours, hosts, installation paths, ports, passwords)
+    `-- settings-prod.cfg       -> TO BE MANUAL CREATED IN PRODUCTION : production critical settings like passwords.
+
+
+CRONS
+~~~~~~
+::
+
+    |-- etc/cron_scripts/backup_pgsql.sh   -> backup script for pgsql
+
+
+SETTINGS
+~~~~~~~~~
+
+
+REVERSE PROXY
+--------------
+We generate two virtualhosts for a cliassical apache setup, mostly ready but feel free to copy/adapt.
+::
+    etc/apache/
+    |-- 100-testcgwb.reverseproxy.conf                     -> a vhost for ruse with a standalone plone (even with haproxy in front of.)
+    |-- 100-testcgwb.reverseproxy.deliverance.conf         -> a vhost for use with a plone behind a deliverance server.
+    `-- apache.cfg
+    etc/templates/apache/
+    |-- 100-testcgwb.reverseproxy.conf.in                  -> Template for a vhost for ruse with a standalone plone (even with haproxy in front of.)
+    `-- 100-testcgwb.reverseproxy.deliverance.conf.in      -> Template for a vhost for use with a plone behind a deliverance server.
+
+In settings.cfg you have now some settings for declaring which host is your reverse proxy backend & the vhost mounting:
+
+    * hosts:zope-front / ports:zope-front                              -> zope front backend
+    * reverseproxy:host / reverseproxy:port / reverseproxy:mount-point -> host / port / mountpoint on the reverse proxy)
+
+
+KGS FILE
+----------
+We provide a part to generate the etc/testcgwb-kgs.cfg file.
+This will allow you to freeze software versions known to work with your project and make reproducible environment.
+This file will be generated the first time that you run buildout.
+To un it, just run bin/buildout -vvvvvvc <CONFIG_FILE> install kgs
+To unlock the versions, cmment out the according statement ``etc/project/testcgwb-kgs}.cfg`` in the extends option of the testcgwb.cfg gile.
+
+PRODUCTION
+-----------
+
+    You have some backups than you can enable in the buildout-prod.cfg, specially for the pgsql cron scripts and its related cron.
+    Think that the user for the postgresql cron must be authorized to connect locally without password.
+
+
+
+# vim:set ft=rest:

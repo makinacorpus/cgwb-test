@@ -134,7 +134,13 @@ parser.add_option("-c", None, action="store", dest="config_file",
                    help=("Specify the path to the buildout configuration "
                          "file to be used."))
 
-options, args = parser.parse_args()
+options, orig_args = parser.parse_args()
+
+args = []
+
+# if -c was provided, we push it back into args for buildout's main function
+if options.config_file is not None:
+    args += ['-c', options.config_file]
 
 if options.eggs:
     eggs_dir = os.path.abspath(os.path.expanduser(options.eggs))
@@ -148,7 +154,7 @@ if options.setup_source is None:
         options.setup_source = setuptools_source
 
 if options.accept_buildout_test_releases:
-    args.insert(0, 'buildout:accept-buildout-test-releases=true')
+    args.append('buildout:accept-buildout-test-releases=true')
 
 try:
     import pkg_resources
@@ -165,8 +171,6 @@ except ImportError:
         setup_args['download_base'] = options.download_base
     if options.use_distribute:
         setup_args['no_fake'] = True
-        if sys.version_info[:2] == (2, 4):
-            setup_args['version'] = '0.6.32'
     ez['use_setuptools'](**setup_args)
     if 'pkg_resources' in sys.modules:
         reload(sys.modules['pkg_resources'])
@@ -189,8 +193,6 @@ if not has_broken_dash_S:
 find_links = options.download_base
 if not find_links:
     find_links = os.environ.get('bootstrap-testing-find-links')
-if not find_links and options.accept_buildout_test_releases:
-    find_links = 'http://downloads.buildout.org/'
 if find_links:
     cmd.extend(['-f', quote(find_links)])
 
@@ -227,8 +229,6 @@ if version is None and not options.accept_buildout_test_releases:
         bestv = None
         for dist in index[req.project_name]:
             distv = dist.parsed_version
-            if distv >= pkg_resources.parse_version('2dev'):
-                continue
             if _final_version(distv):
                 if bestv is None or distv > bestv:
                     best = [dist]
@@ -238,12 +238,8 @@ if version is None and not options.accept_buildout_test_releases:
         if best:
             best.sort()
             version = best[-1].version
-
 if version:
-    requirement += '=='+version
-else:
-    requirement += '<2dev'
-
+    requirement = '=='.join((requirement, version))
 cmd.append(requirement)
 
 if is_jython:
@@ -262,16 +258,9 @@ if exitcode != 0:
 ws.add_entry(eggs_dir)
 ws.require(requirement)
 import zc.buildout.buildout
-
-# If there isn't already a command in the args, add bootstrap
-if not [a for a in args if '=' not in a]:
-    args.append('bootstrap')
-
-
-# if -c was provided, we push it back into args for buildout's main function
-if options.config_file is not None:
-    args[0:0] = ['-c', options.config_file]
-
-zc.buildout.buildout.main(args)
+if orig_args:
+    # run buildout with commands passed to bootstrap.py, then actually bootstrap
+    zc.buildout.buildout.main(args + orig_args)
+zc.buildout.buildout.main(args + ['bootstrap'])
 if not options.eggs:  # clean up temporary egg directory
     shutil.rmtree(eggs_dir)

@@ -1,0 +1,32 @@
+<VirtualHost *:${v:reverse-proxy-port}>
+ServerAdmin     ubuntu@localhost
+DocumentRoot    ${buildout:directory}
+ServerName      ${v:reverse-proxy-host}
+ServerAlias     bis.localhost.com.bis
+ServerAlias     ter.localhost.com
+ErrorLog        ${buildout:directory}/var/log/apache/${v:reverse-proxy-host}_log
+TransferLog     ${buildout:directory}/var/log/apache/${v:reverse-proxy-host}-access_log
+CustomLog       ${buildout:directory}/var/log/apache/${v:reverse-proxy-host}-access_log combined
+DirectoryIndex   index.html index.htm
+<Directory "${buildout:directory}">
+    Options  ExecCGI IncludesNOEXEC FollowSymLinks -Indexes
+    AllowOverride All
+    Order allow,deny
+    Allow from all
+</Directory>
+ProxyRequests off
+<Proxy *>
+  Order allow,deny
+  Allow from all
+</Proxy>
+RewriteEngine  on
+
+# supervisor
+ProxyPass         /supervisor/ http://${hosts:supervisor}:${ports:supervisor}/
+ProxyPassReverse  /supervisor/ http://${hosts:supervisor}:${ports:supervisor}/
+
+ProxyPass         / http://${hosts:front}:${ports:front}/
+ProxyPassReverse  / http://${hosts:front}:${ports:front}/
+
+# vim: set ft=xml:
+</VirtualHost>

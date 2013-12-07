@@ -7,9 +7,8 @@ fi
 mkdir tmp
 cd tmp
 tar xzvf $(ls -1rt ~/cgwb/testcgwb*z|head -n1)
-cd testcgwb || exit -1
-rsync -azv ./ ../../
-cd ../..
+rsync -azv ./ ../
+cd ../
 rm -rf tmp
 if [[ -z $no_clean ]];then
     rm -rf .installed.cfg downloads/ .mr.developer.cfg parts/ bin/ develop-eggs/ eggs/*egg
