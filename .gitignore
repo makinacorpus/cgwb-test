@@ -1,4 +1,6 @@
 bin
+etc/sys/100-*.reverseproxy.conf
+etc/wsgi/
 .coverage
 htmlcov/
 cron_scripts/
