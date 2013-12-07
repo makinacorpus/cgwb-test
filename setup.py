@@ -20,13 +20,14 @@ classifiers = [
     "Topic :: Software Development"]
 EPS = {
     'console_scripts': [
-        'testcgwb = testcgwb.testcgwb:main',
+        'testcgwb = toto.testcgwb.testcgwb:main',
     ]
  }
-name = 'testcgwb'
+name = 'toto.testcgwb'
 setup(
     name=name,
     namespace_packages=[
+         'toto'
     ],
     version=version,
     description='Project %s',

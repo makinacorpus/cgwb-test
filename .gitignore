@@ -1,7 +1,7 @@
 *.mo
 .coverage
-htmlcov
 generated-kgs.cfg
+htmlcov/
 tags
 tags.python
 plone.env
