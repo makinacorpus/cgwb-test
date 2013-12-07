@@ -1,14 +1,16 @@
 #!/usr/bin/env bash
 cd $(dirname $0)
-rm -rf etc src
 if [[ -n $fulltest ]];then
-    rm -rf src testcgwb docs
-    tar xzvf $(ls -1rt ~/cgwb/testcgwb*z|head -n1)
-    cd testcgwb || exit -1
-    mv -f * .* ..
-    cd ..
-    rm -rf testcgwb
+    rm -rf etc src
+    rm -rf src/testcgwb testcgwb docs
 fi
+mkdir tmp
+cd tmp
+tar xzvf $(ls -1rt ~/cgwb/testcgwb*z|head -n1)
+cd testcgwb || exit -1
+rsync -azv ./ ../../
+cd ../..
+rm -rf tmp
 if [[ -z $no_clean ]];then
     rm -rf .installed.cfg downloads/ .mr.developer.cfg parts/ bin/ develop-eggs/ eggs/*egg
 fi

@@ -5,6 +5,9 @@ from pyramid.config import Configurator
 from testcgwb import utils
 
 
+here = pkg_resources.resource_filename('testcgwb', '/')
+
+
 def main(global_config, **local_config):
     """
     A paste.httpfactory to wrap a pyramid WSGI based application.
@@ -18,7 +21,7 @@ def main(global_config, **local_config):
         wconf['pyramid.reload_templates'] = 'true'
         wconf['debugtoolbar.eval_exc'] = 'true'
         wconf['debugtoolbar.enabled'] = 'true'
-    wconf['zcmls'] = utils.splitstrip(wconf.get('zcmls', '')
+    wconf['zcmls'] = utils.splitstrip(wconf.get('zcmls', ''))
     if not wconf['zcmls']:
         wconf['zcmls'] = []
     wconf['zcmls'].insert(0, 'configure.zcml')
@@ -34,6 +37,9 @@ def main(global_config, **local_config):
     config.include('pyramid_debugtoolbar')
     config.include('pyramid_chameleon')
     config.include('pyramid_zcml')
+    config.add_route('home', '/')
+    config.scan()
+    config.add_static_view(name='resources', path=here + '/static')
     config.hook_zca()
     for z in wconf['zcmls']:
         config.load_zcml(z)

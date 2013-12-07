@@ -1,4 +1,6 @@
 bin
+etc/instance.ini
+etc/generated-kgs.cfg
 .coverage
 htmlcov/
 build

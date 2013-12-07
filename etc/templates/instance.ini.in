@@ -6,18 +6,18 @@ debug = ${parts.buildout.debug}
 
 [composite:main]
 use = egg:Paste#urlmap
-/= pwebbuilder
+/= ppyramidapp
 
-[pipeline:pwebbuilder]
+[pipeline:ppyramidapp]
 pipeline = translogger
-           webbuilderapp
+           pyramidappapp
 
 [filter:translogger]
 use=egg:Paste#translogger
 setup_console_handler = False
 logger_name = wsgi
 
-[app:webbuilderapp]
+[app:pyramidappapp]
 use = egg:testcgwb#main
 
 [loggers]
