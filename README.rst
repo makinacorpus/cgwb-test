@@ -24,7 +24,7 @@ Lint
     bin/code-analysis
 
 coverage
-======
+========
 ::
 
     bin/create-coverage
