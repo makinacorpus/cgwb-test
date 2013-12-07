@@ -80,7 +80,7 @@ propagate = 0
 # with DEBUG level.
 [logger_routes]
 level = NOTSET
-handlers = console,fconsole
+handlers = console
 qualname = routes.middleware
 propagate = 0
 
