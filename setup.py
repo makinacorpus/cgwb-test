@@ -1,6 +1,8 @@
-import os
+#!/usr/bin/env python
+# -*- coding: utf-8 -
 from setuptools import setup, find_packages
 
+name = 'testcgwb'
 version = "1.0dev"
 
 
@@ -9,46 +11,71 @@ def read(*rnames):
         os.path.join('.', *rnames)
     ).read()
 
+
 long_description = "\n\n".join(
     [read('README.rst'),
      read('docs', 'INSTALL.rst'),
-     read('docs', 'HISTORY.rst')]
+     read('docs', 'CHANGES.rst')]
 )
-
-classifiers = [
-    "Programming Language :: Python",
-    "Topic :: Software Development"]
 EPS = {
+    'paste.app_factory':  [
+        'main=testcgwb:main',
+    ],
     'console_scripts': [
-        'testcgwb = tata.toto.testcgwb.testcgwb:main',
-    ]
- }
-name = 'tata.toto.testcgwb'
+        '%s=testcgwb.webserver:main' % name ,
+    ],
+}
 setup(
     name=name,
     namespace_packages=[
-         'tata',
     ],
     version=version,
-    description='Project %s',
-    long_description=long_description,
-    classifiers=classifiers,
-    keywords='',
+    description='Project testcgwb',
+    long_description = '' ,
     author='ubuntu <ubuntu@localhost>',
     author_email='ubuntu@localhost',
-    url='http://foo.net',
     license='GPL',
-    packages=find_packages('src'),
-    package_dir={'': 'src'},
-    include_package_data=True,
-    extras_require={
-        'test': ['plone.testing']
-    },
+    keywords='',
+    url='http://www.generic.com',
     install_requires=[
         'setuptools',
-        # -*- Extra requirements: -*-
+        "psycopg2",
+        "egenix-mx-base",
+        "sqlalchemy",
+        "PIL",
+        "lxml",
+        "elementtree",
+        "CherryPy",
+        "cryptacular",
+        "gunicorniniparse",
+        "Paste",
+        "PasteDeploy",
+        "Pastescript",
+        "pyramid",
+        "pyramid_chameleon",
+        "pyramid_debugtoolbar",
+        "pyramid_zcml",
+        "repoze.tm2",
+        "repoze.vhm",
+        "waitress",
+        "WebError",
+        "WebOb",
+        "zope.component",
     ],
-    # define there your console scripts
-    entry_points=EPS,
+    classifiers=[
+        'Development Status :: 4 - Beta',
+        'Environment :: Web Environment',
+        'Intended Audience :: Developers',
+        'License :: OSI Approved :: BSD License',
+        'Operating System :: OS Independent',
+        'Programming Language :: Python',
+    ],
+    packages=find_packages('src'),
+    package_dir={'': 'src'},
+    # Make setuptools include all data files under version control,
+    # svn and CVS by default
+    include_package_data=True,
+    zip_safe=False,
+    extras_require={'test': ['IPython', 'plone.testing']},
+    entry_points = EPS,
 )
-# vim:set ft=python:
