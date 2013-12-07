@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -
+import os
 from setuptools import setup, find_packages
 
 name = 'testcgwb'
@@ -18,11 +19,11 @@ long_description = "\n\n".join(
      read('docs', 'CHANGES.rst')]
 )
 EPS = {
-    'paste.app_factory':  [
+    'paste.app_factory': [
         'main=testcgwb:main',
     ],
     'console_scripts': [
-        '%s=testcgwb.webserver:main' % name ,
+        '%s=testcgwb.webserver:main' % name,
     ],
 }
 setup(
@@ -31,7 +32,7 @@ setup(
     ],
     version=version,
     description='Project testcgwb',
-    long_description = '' ,
+    long_description='',
     author='ubuntu <ubuntu@localhost>',
     author_email='ubuntu@localhost',
     license='GPL',
@@ -75,5 +76,5 @@ setup(
     include_package_data=True,
     zip_safe=False,
     extras_require={'test': ['IPython', 'plone.testing']},
-    entry_points = EPS,
+    entry_points=EPS,
 )
