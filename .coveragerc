@@ -1,8 +1,8 @@
 [run]
 branch = True
 source =
-    src/
+    src/tata
 omit =
-    src//toto/tests/**/*.py
-    src//toto/tests/*.py
-    src//toto/testing.py
+    src/tata/toto/tests/**/*.py
+    src/tata/toto/tests/*.py
+    src/tata/toto/testing.py

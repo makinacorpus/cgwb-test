@@ -17,17 +17,17 @@ class Layer(Base):
     defaultBases = tuple()
 
 
-TOTO_TESTCGWB_FIXTURE = Layer()
+TATA_TOTO_TESTCGWB_FIXTURE = Layer()
 
 
 class IntegrationLayer(Layer):
     """."""
-    defaultBases = (TOTO_TESTCGWB_FIXTURE,)
+    defaultBases = (TATA_TOTO_TESTCGWB_FIXTURE,)
 
 
 class FunctionnalLayer(IntegrationLayer):
     """."""
-    defaultBases = (TOTO_TESTCGWB_FIXTURE,)
+    defaultBases = (TATA_TOTO_TESTCGWB_FIXTURE,)
 
-TOTO_TESTCGWB_INTEGRATION_TESTING = IntegrationLayer()
-TOTO_TESTCGWB_FUNCTIONAL_TESTING = FunctionnalLayer()
+TATA_TOTO_TESTCGWB_INTEGRATION_TESTING = IntegrationLayer()
+TATA_TOTO_TESTCGWB_FUNCTIONAL_TESTING = FunctionnalLayer()

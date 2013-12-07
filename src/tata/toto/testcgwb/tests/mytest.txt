@@ -2,7 +2,7 @@
 
     >>> 1 == 1
     True
-    >>> from toto.testcgwb.testcgwb import main
+    >>> from tata.toto.testcgwb.testcgwb import main
     >>> main()
     hello world!
 

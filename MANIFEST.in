@@ -1,4 +1,4 @@
 include *.txt *.cfg *.rst .coveragerc
 recursive-include docs *
-recursive-include src/ *
+recursive-include src/tata *
 global-exclude *pyc

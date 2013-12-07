@@ -25,7 +25,7 @@ def get_globs():
 # from for import bar
 # and in your doctests, you can do:
 # >>> bar.something
-from toto.testcgwb.testing import TOTO_TESTCGWB_FUNCTIONAL_TESTING as FUNCTIONAL_TESTING
+from tata.toto.testcgwb.testing import TATA_TOTO_TESTCGWB_FUNCTIONAL_TESTING as FUNCTIONAL_TESTING
 
 optionflags = (doctest.ELLIPSIS
                | doctest.NORMALIZE_WHITESPACE
@@ -34,7 +34,7 @@ optionflags = (doctest.ELLIPSIS
 
 def test_suite():
     """."""
-    logger = logging.getLogger('toto.testcgwb.tests')
+    logger = logging.getLogger('tata.toto.testcgwb.tests')
     cwd = os.path.dirname(__file__)
     files = []
     try:
@@ -44,7 +44,7 @@ def test_suite():
                       os.path.dirname(cwd)]:
                 files += glob.glob(os.path.join(d, e))
     except Exception:
-        logger.warn('No doctests for toto.testcgwb')
+        logger.warn('No doctests for tata.toto.testcgwb')
     suite = unittest.TestSuite()
     globs = get_globs()
     for s in files:
