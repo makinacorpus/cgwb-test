@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -
 import os
 from setuptools import setup, find_packages
-
 name = 'testcgwb'
 version = "1.0dev"
 
@@ -22,15 +21,14 @@ EPS = {
     'paste.app_factory': [
         'main=testcgwb:main',
     ],
-    'console_scripts': [
-        '%s=testcgwb.webserver:main' % name,
-    ],
 }
+
+name = 'testcgwb'
 setup(
     name=name,
     namespace_packages=[
     ],
-    version=version,
+    version=version
     description='Project testcgwb',
     long_description='',
     author='ubuntu <ubuntu@localhost>',
@@ -40,26 +38,6 @@ setup(
     url='http://www.generic.com',
     install_requires=[
         'setuptools',
-        "PIL",
-        "lxml",
-        "elementtree",
-        "CherryPy",
-        "cryptacular",
-        "gunicorn",
-        "iniparse",
-        "Paste",
-        "PasteDeploy",
-        "Pastescript",
-        "pyramid",
-        "pyramid_chameleon",
-        "pyramid_debugtoolbar",
-        "pyramid_zcml",
-        "repoze.tm2",
-        "repoze.vhm",
-        "waitress",
-        "WebError",
-        "WebOb",
-        "zope.component",
     ],
     classifiers=[
         'Development Status :: 4 - Beta',
@@ -75,6 +53,8 @@ setup(
     # svn and CVS by default
     include_package_data=True,
     zip_safe=False,
-    extras_require={'test': ['IPython', 'plone.testing']},
+    extras_require={'test': ['IPython', 'zope.testing', 'mocker']},
     entry_points=EPS,
 )
+
+

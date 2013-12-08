@@ -1,18 +1,34 @@
-# WSGI CONFIGURATION FILE
-
+# bv.clientb WSGI CONFIGURATION FILE
 [DEFAULT]
-debug=${instance:debug}
+debug=${options.debug}
 
 [composite:main]
 use=egg:Paste#urlmap
-/threads/=watch_threads
+# % if options.debug=='false' %
+/static/admin=padminmedia
+/static/=pstatic
+/media/=pmedia
+# % end %
 /=pmain
+/threads/=watch_threads
 
 [pipeline:pmain]
-pipeline= translogger exc projectapp
+pipeline= fvhm exc translogger projectapp
+
+[pipeline:pstatic]
+pipeline= fvhm translogger exc staticapp
+
+[pipeline:pmedia]
+pipeline= fvhm translogger exc mediaapp
+
+[pipeline:padminmedia]
+pipeline= fvhm translogger exc adminmediaapp
 
 [app:watch_threads]
 use=egg:Paste#watch_threads
+
+[filter:fvhm]
+use = egg:repoze.vhm#vhm_xheaders
 
 [filter:translogger]
 use=egg:Paste#translogger
@@ -23,37 +39,33 @@ logger_name = wsgi
 use=egg:Paste#printdebug
 
 [filter:exc]
-use=egg:WebError#evalerror
+use=egg:dj.paste#weberror
+debug = true
+error_email = mpa@makina-corpus.com
+from_address = mobyle@test.com
+;show_exceptions_in_wsgi_errors = true
+smtp_server = localhost
+;smtp_use_tls =
+;smtp_username = janitor
+;smtp_password = "janitor's password"
+error_subject_prefix = "formhub Error"
 
 [app:projectapp]
-use=egg:${instance:ep}
-zcmls=
-# indicate here full path to zcmls or
-# relative path inside your egg
-pyramid.includes=
+use=egg:dj.paste
+django_settings_module=${options.dsm}
 
-# various addons pre configurations
-pyramid.default_locale_name = en
-mako.directories=${instance:egg}:templates
-pyramid.debug_all=${instance:debug}
-#pyramid.debug_authorization=${instance:debug}
-#pyramid.debug_routematch=${instance:debug}
-#pyramid.debug_templates=${instance:debug}
-pyramid.reload_all=${instance:debug}
-#pyramid.reload_assets=${instance:debug}
-#pyramid.reload_resources=${instance:debug}
-#pyramid.reload_templates=${instance:debug}
-pyramid.includes =
-    pyramid_debugtoolbar
+[app:staticapp]
+use = egg:Paste#static
+document_root = ${parts.v.pkgdir}/static
 
-#debug toolbar
-debugtoolbar.intercept_exc=${instance:intercept_exc_debug}
-debugtoolbar.eval_exc=${instance:debug}
-debugtoolbar.enabled=${instance:debug}
+[app:mediaapp]
+use = egg:Paste#static
+document_root = ${parts.v.pkgdir}/media
 
-
-
-
+[app:adminmediaapp]
+use = egg:Paste#pkg_resources
+egg = Django
+resource_name=django/contrib/admin/media/
 
 [loggers]
 keys = root,wsgi,routes
@@ -72,7 +84,7 @@ handlers = console
 # Send all messages to the 'wsgi' logger to the accesslog and errorlog handlers
 [logger_wsgi]
 level = NOTSET
-handlers = console
+handlers = accesslog,console
 qualname = wsgi
 propagate = 0
 
@@ -85,13 +97,14 @@ qualname = routes.middleware
 propagate = 0
 
 # Handler for printing messages to the console
-[handler_accesslog]
+[handler_console]
 class = StreamHandler
 args = (sys.stderr,)
 level = INFO
 formatter = generic
 
-[handler_console]
+# Handler for writing access.log style log lines to an "access.log" file
+[handler_accesslog]
 class = StreamHandler
 args = (sys.stderr,)
 level = INFO
@@ -107,8 +120,9 @@ format = %(asctime)s %(name)s[%(levelname)s] %(message)s
 format = %(message)s
 
 [server:main]
-use=${server}
-host=${host}
-port=${port}
+use=${options.wsgi_server}
+host=${options.host}
+port=${options.port}
 
 # vim:set et ts=4 sts=4 ft=cfg:
+{% end %}

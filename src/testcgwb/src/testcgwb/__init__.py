@@ -1,46 +1,44 @@
+#!/usr/bin/env python
+
+# Copyright (C) 2009, Mathieu PASQUET <mpa@makina-corpus.com>
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+__docformat__ = 'restructuredtext en'
+
 import os
-import pkg_resources
-from zope.component import getGlobalSiteManager
-from pyramid.config import Configurator
-from testcgwb import utils
+import sys
+import subprocess
+
+dirname = os.path.abspath(os.path.dirname(__file__))
+if not 'DJANGO_SETTINGS_MODULE' in os.environ:
+    os.environ['DJANGO_SETTINGS_MODULE'] = '${project}.${project}.settings'
+os.environ['PYTHONPATH'] = ':'.join(sys.path + os.environ.get('PYTHONPATH', '').split(':'))
 
 
-here = pkg_resources.resource_filename('testcgwb', '/')
+def wrap(script):
+    sys.argv.pop(0)
+    sys.exit(
+        subprocess.Popen(
+            [sys.executable, os.path.join(dirname, script)] + sys.argv,
+            env=os.environ
+        ).wait()
+    )
 
 
-def main(global_config, **local_config):
-    """
-    A paste.httpfactory to wrap a pyramid WSGI based application.
-    """
-    dn = 'testcgwb'
-    wconf = global_config.copy()
-    wconf.update(**local_config)
-    if global_config.get('debug', 'False').lower() == 'true':
-        wconf['pyramid.debug_authorization'] = 'true'
-        wconf['pyramid.debug_notfound'] = 'true'
-        wconf['pyramid.reload_templates'] = 'true'
-        wconf['debugtoolbar.eval_exc'] = 'true'
-        wconf['debugtoolbar.enabled'] = 'true'
-    wconf['zcmls'] = utils.splitstrip(wconf.get('zcmls', ''))
-    if not wconf['zcmls']:
-        wconf['zcmls'] = []
-    wconf['zcmls'].insert(0, 'configure.zcml')
-    for i, zcml in enumerate(wconf['zcmls']):
-        if os.path.sep in zcml:
-            zcml = os.path.abspath(zcml)
-        else:
-            zcml = pkg_resources.resource_filename(dn, zcml)
-        wconf['zcmls'][i] = zcml
-    globalreg = getGlobalSiteManager()
-    config = Configurator(registry=globalreg)
-    config.setup_registry(settings=wconf)
-    config.include('pyramid_debugtoolbar')
-    config.include('pyramid_chameleon')
-    config.include('pyramid_zcml')
-    config.add_route('home', '/')
-    config.scan()
-    config.add_static_view(name='resources', path=here + '/static')
-    config.hook_zca()
-    for z in wconf['zcmls']:
-        config.load_zcml(z)
-    return config.make_wsgi_app()
+def manage():
+    wrap('manage_settings.py')
+
+
+def manage():
+    wrap('manage.py')
+
+# vim:set et sts=4 ts=4 tw=80:
