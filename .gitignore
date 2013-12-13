@@ -6,7 +6,7 @@ downloads
 *.egg
 *.egg-link
 *.egg-info
-*.EGG-INFO 
+*.EGG-INFO
 etc/apache/100*.reverseproxy.conf
 etc/forespir.env
 etc/init.d/

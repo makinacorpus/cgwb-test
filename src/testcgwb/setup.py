@@ -7,14 +7,14 @@ version = "1.0dev"
 
 def read(*rnames):
     return open(
-        os.path.join('.', *rnames)
+        os.path.join(".", *rnames)
     ).read()
 
 
 long_description = "\n\n".join(
-    [read('README.rst'),
-     read('docs', 'INSTALL.rst'),
-     read('docs', 'CHANGES.rst')]
+    [read("README.rst"),
+     read("docs", "INSTALL.rst"),
+     read("docs", "CHANGES.rst")]
 )
 
 classifiers = [
@@ -26,49 +26,53 @@ classifiers = [
     "Programming Language :: Python",
     "Topic :: Software Development"]
 
-name = 'testcgwb'
+name = "testcgwb"
 setup(
     name=name,
     namespace_packages=[
     ],
     version=version,
-    description='Project %s',
+    description="Project %s",
     long_description=long_description,
     classifiers=classifiers,
-    keywords='',
-    author='kiorky <kiorky@localhost>',
-    author_email='kiorky@localhost',
-    url='http://www.generic.com',
-    license='GPL',
-    packages=find_packages('src'),
-    package_dir={'': 'src'},
+    keywords="",
+    author="kiorky <kiorky@localhost>",
+    author_email="kiorky@localhost",
+    url="http://www.generic.com",
+    license="GPL",
+    packages=find_packages("src"),
+    package_dir={"": "src"},
     include_package_data=True,
     install_requires=[
-        'setuptools',
-        'z3c.autoinclude',
-        'Plone',
-        'chardet',
-        'plone.app.upgrade',
+        "setuptools",
+        "z3c.autoinclude",
+        "Plone",
+        "chardet",
+        "plone.app.upgrade",
+        "plone.app.themingplugins",
+        "collective.dexteritytextindexer",
+        "plone.app.dexterity [relations]",
+        "plone.app.referenceablebehavior",
+        "plone.directives.dexterity",
+        "plone.directives.form",
         # with_ploneproduct_pacaching
-        'plone.app.caching',
-        # with_ploneproduct_dexterity
-        'collective.dexteritytextindexer',
-        'plone.app.dexterity',
-        'plone.app.referenceablebehavior',
-        'plone.directives.dexterity',
-        'plone.directives.form',
-        # with_ploneproduct_patheming
-        'plone.app.theming',
-        'plone.app.themingplugins',
+        "plone.app.caching",
         # with_binding_pil
-        'Pillow',
+        "Pillow",
+        # with_ploneproduct_eeatags
+        "eea.tags",
+        # with_ploneproduct_eeadaviz
+        "eea.daviz[full]",
+        "eea.relations",
+        # with_ploneproduct_addthis
+        "collective.addthis",
         # -*- Extra requirements: -*-
     ],
     extras_require={
-        'test': ['plone.app.testing', 'ipython']
+        "test": ["plone.app.testing", "ipython"]
     },
     entry_points={
-        'z3c.autoinclude.plugin': ['target = plone'],
+        "z3c.autoinclude.plugin": ["target = plone"],
     },
 )
 # vim:set ft=python:

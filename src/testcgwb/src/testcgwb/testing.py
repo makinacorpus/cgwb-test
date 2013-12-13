@@ -74,24 +74,21 @@ class TestcgwbLayer(PloneSandboxLayer):
         #with_ploneproduct_pacaching
         import plone.app.caching
         self.loadZCML('configure.zcml', package=plone.app.caching)
-        #with_ploneproduct_dexterity
-        import plone.app.dexterity
-        self.loadZCML('configure.zcml', package=plone.app.dexterity)
+        #with_ploneproduct_eeatags
+        import eea.tags
+        self.loadZCML('configure.zcml', package=eea.tags)
+        #with_ploneproduct_eeadaviz
+        import eea.daviz
+        self.loadZCML('configure.zcml', package=eea.daviz)
+        import eea.tags
+        self.loadZCML('configure.zcml', package=eea.tags)
+        import collective.addthis
+        self.loadZCML('configure.zcml', package=collective.addthis)
         import plone.app.caching
         self.loadZCML('configure.zcml', package=plone.app.caching)
-        import plone.app.theming
-        self.loadZCML('configure.zcml', package=plone.app.theming)
-        import plone.app.themingplugins
-        self.loadZCML('configure.zcml', package=plone.app.themingplugins)
-        #with_ploneproduct_patheming
-        import plone.app.theming
-        self.loadZCML('configure.zcml', package=plone.app.theming)
-        import plone.app.themingplugins
-        self.loadZCML('configure.zcml', package=plone.app.themingplugins)
-        import plone.app.theming
-        self.loadZCML('configure.zcml', package=plone.app.theming)
-        import plone.app.themingplugins
-        self.loadZCML('configure.zcml', package=plone.app.themingplugins)
+        #with_ploneproduct_addthis
+        import collective.addthis
+        self.loadZCML('configure.zcml', package=collective.addthis)
 
         # -----------------------------------------------------------------------
         # Load our own testcgwb
@@ -104,11 +101,6 @@ class TestcgwbLayer(PloneSandboxLayer):
         #   which can't happen until we have loaded the package ZCML.
         # ------------------------------------------------------------------------
 
-        #with_ploneproduct_patheming
-        z2.installProduct(app, 'plone.app.theming')
-        z2.installProduct(app, 'plone.app.themingplugins')
-        z2.installProduct(app, 'plone.app.theming')
-        z2.installProduct(app, 'plone.app.themingplugins')
         z2.installProduct(app, 'testcgwb')
 
         # -------------------------------------------------------------------------

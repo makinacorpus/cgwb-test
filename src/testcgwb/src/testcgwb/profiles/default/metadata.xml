@@ -5,8 +5,10 @@
   <!-- QuickInstalled dependencies -->
       <dependency>profile-testcgwb:qi</dependency>
   <!-- GenericSetup dependencies -->
-      <dependency>profile-plone.app.theming:default</dependency>
-      <dependency>profile-plone.app.caching:default</dependency>
       <dependency>profile-plone.app.dexterity:default</dependency>
+      <dependency>profile-eea.tags:default</dependency>
+      <dependency>profile-eea.daviz:default</dependency>
+      <dependency>profile-collective.addthis:default</dependency>
+      <dependency>profile-plone.app.caching:default</dependency>
  </dependencies>
 </metadata>
