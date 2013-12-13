@@ -41,8 +41,9 @@ from plone.app.testing.selenium_layers import (
 )
 
 TESTED_PRODUCTS = (
+#with_ploneproduct_eeatags
+    'eea.facetednavigation',
 #with_ploneproduct_eeadaviz
-    'eea.relations',
 )
 
 PLONE_MANAGER_NAME = 'Plone_manager'
@@ -67,8 +68,7 @@ class TestJpcwLayer(PloneSandboxLayer):
         self.browser = Browser(app)
         # old zope2 style products
         z2.installProduct(app, 'Products.PythonScripts')
-        for product in TESTED_PRODUCTS:
-            z2.installProduct(app, product)
+
 
         # ----------------------------------------------------------------------
         # Import all our python modules required by our packages
@@ -127,6 +127,8 @@ class TestJpcwLayer(PloneSandboxLayer):
         #with_ploneproduct_eeatags
         #with_ploneproduct_plomino
 
+        for product in TESTED_PRODUCTS:
+            z2.installProduct(app, product)
         # -----------------------------------------------------------------------
         # Load our own jpcw
         # -----------------------------------------------------------------------
