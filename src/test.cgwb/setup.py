@@ -30,7 +30,7 @@ name = "test.cgwb"
 setup(
     name=name,
     namespace_packages=[
-         "test"
+        "test"
     ],
     version=version,
     description="Project testcgwb",
@@ -39,7 +39,7 @@ setup(
     keywords="",
     author="kiorky <kiorky@localhost>",
     author_email="kiorky@localhost",
-    url="http://www.generic.com",
+    url="http://cgwb-makinacorpus.rhcloud.com",
     license="GPL",
     packages=find_packages("src"),
     package_dir={"": "src"},

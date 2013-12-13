@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 cd $(dirname $0)/..
-IMPORT_URL="ssh://git@github.com:orga/project.git"
+IMPORT_URL="git@github.com:makinacorpus/cgwb-test.git"
 PROJECT="cgwb"
 GITORIOUS=""
 GDOT="."

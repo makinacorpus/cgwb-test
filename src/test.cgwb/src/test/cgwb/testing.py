@@ -41,16 +41,101 @@ from plone.app.testing.selenium_layers import (
 )
 
 TESTED_PRODUCTS = (
-#with_ploneproduct_eeatags
+    #with_ploneproduct_eeatags
     'eea.facetednavigation',
-#with_ploneproduct_eeadaviz
+    #with_ploneproduct_eeadaviz
     'eea.relations',
 )
 
 PLONE_MANAGER_NAME = 'Plone_manager'
 PLONE_MANAGER_ID = 'plonemanager'
 PLONE_MANAGER_PASSWORD = 'plonemanager'
-GENTOO_FF_UA = 'Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.1.3) Gecko/20090912 Gentoo Shiretoko/3.5.3'
+GENTOO_FF_UA = ('Mozilla/5.0 (X11; U; Linux i686; en-US; '
+                'rv:1.9.1.3) Gecko/20090912 '
+                'Gentoo Shiretoko/3.5.3')
+cwd = os.path.dirname(__file__)
+zope.component.provideAdapter(DefaultTraversable, [None])
+
+
+def get_interfaces(obj):
+    return [o for o in obj.__provides__.interfaces()]
+
+
+def errprint(msg):
+    """Writes 'msg' to stderr and flushes the stream."""
+    sys.stderr.write(msg)
+    sys.stderr.flush()
+
+
+def pstriplist(s):
+    print '\n'.join([a.rstrip() for a in s.split('\n') if a.strip()])
+
+
+class Request(zope.publisher.browser.TestRequest):
+    def __setitem__(self, name, value):
+        self._environ[name] = value
+
+
+class Browser(z2.Browser):  # pragma: no cover
+    """Patch the browser class to be a little more like a webbrowser."""
+
+    def __init__(self, app, url=None, headers=None):
+        if headers is None:
+            headers = []
+        z2.Browser.__init__(self, app, url)
+        self.mech_browser.set_handle_robots(False)
+        for h in headers:
+            k, val = h
+            self.addHeader(k, val)
+        if url is not None:
+            self.open(url)
+
+    def print_contents_to_file(self, dest='~/.browser.html'):
+        fic = open(os.path.expanduser(dest), 'w')
+        fic.write(self.contents)
+        fic.flush()
+        fic.close()
+
+    @property
+    def print_contents(self):
+        """Print the browser contents somewhere for you to see its
+        context in doctest pdb, t
+        ype browser.print_contents(browser) and that's it,
+        open firefox with file://~/browser.html."""
+        self.print_contents_to_file()
+
+    @classmethod
+    def new(cls, url=None, user=None, passwd=None, headers=None, login=False):
+        """instantiate and return a testbrowser for convenience """
+        app = TEST_CGWB_FUNCTIONAL_TESTING['app']
+        portal = TEST_CGWB_FUNCTIONAL_TESTING['portal']
+        if not url:
+            url = portal.absolute_url()
+        if headers is None:
+            headers = []
+        if user:
+            login = True
+        if not user:
+            user = PLONE_MANAGER_NAME
+        if not passwd:
+            passwd = PLONE_MANAGER_PASSWORD
+        if login:
+            auth = 'Basic %s:%s' % (user, passwd)
+            headers.append(('Authorization', auth))
+        headers.append(('User-agent', GENTOO_FF_UA))
+        browser = cls(app, url, headers=headers)
+        return browser
+
+
+TestRequest = Request
+
+
+def make_request(url='http://nohost/@@myview', form=None, *args, **kwargs):
+    r = Request(environ={'SERVER_URL': url, 'ACTUAL_URL': url},
+                form=form, *args, **kwargs)
+    zope.interface.alsoProvides(
+        r, zope.annotation.interfaces.IAttributeAnnotatable)
+    return r
 
 
 class TestCgwbLayer(PloneSandboxLayer):
@@ -68,9 +153,9 @@ class TestCgwbLayer(PloneSandboxLayer):
         self.app = app
         self.browser = Browser(app)
 
-        # ----------------------------------------------------------------------
+        # ------------------------------------------------------
         # Import all our python modules required by our packages
-        # ---------------------------------------------------------------------
+        # ------------------------------------------------------
 
         import plone.app.dexterity
         self.loadZCML('configure.zcml', package=plone.app.dexterity)
@@ -130,22 +215,30 @@ class TestCgwbLayer(PloneSandboxLayer):
         for product in TESTED_PRODUCTS:
             z2.installProduct(app, product)
 
-        # -----------------------------------------------------------------------
+        # ----------------------------------------------------
         # Load our own cgwb
-        # -----------------------------------------------------------------------
+        # ----------------------------------------------------
         import test.cgwb
-        self.loadZCML('configure.zcml', package=test.cgwb)
+        self.loadZCML(
+            'configure.zcml',
+            package=test.cgwb
+        )
 
-        # ------------------------------------------------------------------------
-        # - Load the python packages that are registered as Zope2 Products
+        # ----------------------------------------------------------
+        # - Load the python packages that are registered as
+        #   Zope2 Products
         #   which can't happen until we have loaded the package ZCML.
-        # ------------------------------------------------------------------------
+        # -----------------------------------------------------------
 
-        z2.installProduct(app, 'test.cgwb')
+        z2.installProduct(
+            app,
+            'test.cgwb'
+        )
 
-        # -------------------------------------------------------------------------
-        # support for sessions without invalidreferences if using zeo temp storage
-        # -------------------------------------------------------------------------
+        # -------------------------------------------------
+        # support for sessions without invalidreferences
+        # if using zeo temp storage
+        # -------------------------------------------------
         app.REQUEST['SESSION'] = self.Session()
         if not hasattr(app, 'temp_folder'):
             tf = Folder('temp_folder')
@@ -161,11 +254,14 @@ class TestCgwbLayer(PloneSandboxLayer):
         self.applyProfile(portal, 'test.cgwb:default')
 
 
-TEST_CGWB_FIXTURE = TestCgwbLayer(name='TestCgwb:Fixture')
+TEST_CGWB_FIXTURE = TestCgwbLayer(
+    name='TestCgwb:Fixture')
 
 
 class LayerMixin(Layer):
-    defaultBases = (TEST_CGWB_FIXTURE,)
+    defaultBases = (
+        TEST_CGWB_FIXTURE,
+    )
 
     def testTearDown(self):
         self.loginAsPortalOwner()
@@ -194,6 +290,7 @@ class LayerMixin(Layer):
         self.setRoles(TEST_USER_ROLES)
         transaction.commit()
         self['globs'] = globals()
+        self['globs'].update(locals())
 
     def add_user(self, portal, id, username, password, roles=None):
         if not roles:
@@ -245,94 +342,18 @@ class SimpleLayer(Layer):
     defaultBases = tuple()
 
 
-TEST_CGWB_SIMPLE = SimpleLayer(name='TestCgwb:Simple')
-TEST_CGWB_INTEGRATION_TESTING = IntegrationTesting(name="TestCgwb:Integration")
-TEST_CGWB_FUNCTIONAL_TESTING = FunctionalTesting(name="TestCgwb:Functional")
-TEST_CGWB_SELENIUM_TESTING = FunctionalTesting(
-    bases=(SELENIUM_TESTING, TEST_CGWB_FUNCTIONAL_TESTING,),
-    name="TestCgwb:Selenium")
-
-
-class Browser(z2.Browser):  # pragma: no cover
-    """Patch the browser class to be a little more like a webbrowser."""
-
-    def __init__(self, app, url=None, headers=None):
-        if headers is None:
-            headers = []
-        z2.Browser.__init__(self, app, url)
-        self.mech_browser.set_handle_robots(False)
-        for h in headers:
-            k, val = h
-            self.addHeader(k, val)
-        if url is not None:
-            self.open(url)
-
-    def print_contents_to_file(self, dest='~/.browser.html'):
-        fic = open(os.path.expanduser(dest), 'w')
-        fic.write(self.contents)
-        fic.flush()
-        fic.close()
-
-    @property
-    def print_contents(self):
-        """Print the browser contents somewhere for you to see its
-        context in doctest pdb, t
-        ype browser.print_contents(browser) and that's it,
-        open firefox with file://~/browser.html."""
-        self.print_contents_to_file()
-
-    @classmethod
-    def new(cls, url=None, user=None, passwd=None, headers=None, login=False):
-        """instantiate and return a testbrowser for convenience """
-        app = TEST_CGWB_FUNCTIONAL_TESTING['app']
-        portal = TEST_CGWB_FUNCTIONAL_TESTING['portal']
-        if not url:
-            url = portal.absolute_url()
-        if headers is None:
-            headers = []
-        if user:
-            login = True
-        if not user:
-            user = PLONE_MANAGER_NAME
-        if not passwd:
-            passwd = PLONE_MANAGER_PASSWORD
-        if login:
-            auth = 'Basic %s:%s' % (user, passwd)
-            headers.append(('Authorization', auth))
-        headers.append(('User-agent', GENTOO_FF_UA))
-        browser = cls(app, url, headers=headers)
-        return browser
-
-
-zope.component.provideAdapter(DefaultTraversable, [None])
-cwd = os.path.dirname(__file__)
-
-
-def get_interfaces(obj):
-    return [o for o in obj.__provides__.interfaces()]
-
-
-def errprint(msg):
-    """Writes 'msg' to stderr and flushes the stream."""
-    sys.stderr.write(msg)
-    sys.stderr.flush()
-
-
-def pstriplist(s):
-    print '\n'.join([a.rstrip() for a in s.split('\n') if a.strip()])
-
-
-class Request(zope.publisher.browser.TestRequest):
-    def __setitem__(self, name, value):
-        self._environ[name] = value
-
-TestRequest = Request
-
-
-def make_request(url='http://nohost/@@myview', form=None, *args, **kwargs):
-    r = Request(environ={'SERVER_URL': url, 'ACTUAL_URL': url}, form=form, *args, **kwargs)
-    zope.interface.alsoProvides(r, zope.annotation.interfaces.IAttributeAnnotatable)
-    return r
-
+TEST_CGWB_SIMPLE = SimpleLayer(
+    name='TestCgwb:Simple')
+TEST_CGWB_INTEGRATION_TESTING = (
+    IntegrationTesting(name="TestCgwb:Integration")
+)
+TEST_CGWB_FUNCTIONAL_TESTING = (
+    FunctionalTesting(name="TestCgwb:Functional")
+)
+TEST_CGWB_SELENIUM_TESTING = (
+    FunctionalTesting(
+        bases=(SELENIUM_TESTING, TEST_CGWB_FUNCTIONAL_TESTING,),
+        name="TestCgwb:Selenium")
+)
 
 # vim:set ft=python:

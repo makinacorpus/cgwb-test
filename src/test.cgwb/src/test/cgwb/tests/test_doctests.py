@@ -4,7 +4,10 @@ Launching all doctests in the tests directory using:
     - the base layer in testing.py
 
 """
-from test.cgwb.testing import TEST_CGWB_FUNCTIONAL_TESTING as FUNCTIONAL_TESTING
+from test.cgwb.testing import (
+    TEST_CGWB_FUNCTIONAL_TESTING
+    as FUNCTIONAL_TESTING
+)
 
 import unittest2 as unittest
 import glob
