@@ -7,6 +7,8 @@
   <!-- GenericSetup dependencies -->
       <dependency>profile-plone.app.dexterity:default</dependency>
       <dependency>profile-plone.app.theming:default</dependency>
+      <dependency>profile-eea.facetednavigation:default</dependency>
+      <dependency>profile-eea.relations:default</dependency>
       <dependency>profile-collective.portlet.embed:default</dependency>
       <dependency>profile-collective.galleria:default</dependency>
       <dependency>profile-collective.oembed:default</dependency>
@@ -15,6 +17,7 @@
       <dependency>profile-eea.daviz:default</dependency>
       <dependency>profile-plone.app.caching:default</dependency>
       <dependency>profile-collective.portlet.oembed:default</dependency>
+      <dependency>profile-plomino.tinymce:default</dependency>
       <dependency>profile-Products.CMFPlomino:default</dependency>
       <dependency>profile-collective.gallery:default</dependency>
  </dependencies>

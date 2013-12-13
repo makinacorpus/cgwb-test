@@ -41,9 +41,6 @@ from plone.app.testing.selenium_layers import (
 )
 
 TESTED_PRODUCTS = (
-#with_ploneproduct_plomino
-    'CMFPlomino',
-    'CMFPlomino',
 )
 
 PLONE_MANAGER_NAME = 'Plone_manager'
@@ -82,10 +79,26 @@ class TestJpcwLayer(PloneSandboxLayer):
         import plone.app.themingplugins
         self.loadZCML('configure.zcml', package=plone.app.themingplugins)
 
+        #with_ploneproduct_plominotinymce
+        import plomino.tinymce
+        self.loadZCML('configure.zcml', package=plomino.tinymce)
         #with_ploneproduct_galleria
+        import collective.js.galleria
+        self.loadZCML('configure.zcml', package=collective.js.galleria)
         import collective.galleria
         self.loadZCML('configure.zcml', package=collective.galleria)
         #with_ploneproduct_eeadaviz
+        from eea import facetednavigation
+        self.loadZCML('meta.zcml', package=facetednavigation)
+        self.loadZCML('overrides.zcml', package=facetednavigation)
+        self.loadZCML('permissions.zcml', package=facetednavigation)
+        self.loadZCML('configure.zcml', package=facetednavigation)
+        self.loadZCML('dexterity.zcml', package=facetednavigation)
+        self.loadZCML('configure.zcml', package=facetednavigation.subtypes)
+        import eea.relations
+        import eea.relations.default
+        self.loadZCML('configure.zcml', package=eea.relations)
+        self.loadZCML('configure.zcml', package=eea.relations.default)
         import eea.daviz
         self.loadZCML('configure.zcml', package=eea.daviz)
         #with_ploneproduct_cpembed

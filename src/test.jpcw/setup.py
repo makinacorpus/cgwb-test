@@ -59,10 +59,11 @@ setup(
         "plone.app.theming",
         "plone.app.themingplugins",
         # with_ploneproduct_galleria
+        "collective.js.galleria",
         "collective.galleria",
         # with_ploneproduct_eeadaviz
-        "eea.daviz[full]",
         "eea.relations",
+        "eea.daviz[full]",
         # with_binding_pil
         "Pillow",
         # with_ploneproduct_cpembed
@@ -77,8 +78,10 @@ setup(
         # with_ploneproduct_pacaching
         "plone.app.caching",
         # with_ploneproduct_eeatags
+        "eea.facetednavigation",
         "eea.tags",
         # with_ploneproduct_plomino
+        "plomino.tinymce",
         "Products.CMFPlomino",
         # -*- Extra requirements: -*-
     ],

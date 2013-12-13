@@ -18,18 +18,37 @@
   <include package="plone.app.dexterity" file="meta.zcml" />
   <!-- Load the ZCML configuration for the test.jpcw package.-->
   <!--with_ploneproduct_galleria -->
+  <include package="collective.js.galleria" file="configure.zcml"/>
   <include package="collective.galleria" file="configure.zcml"/>
   <!--with_ploneproduct_cpembed -->
   <include package="collective.portlet.embed" file="configure.zcml"/>
+  <!--with_ploneproduct_eeafn -->
   <!--with_ploneproduct_eeatags -->
+  <!--with_ploneproduct_eeadaviz -->
+  <include package="eea.facetednavigation" file='meta.zcml'      />
+  <includeOverrides package="eea.facetednavigation" file='overrides.zcml' />
+  <include package="eea.facetednavigation" file='configure.zcml' />
+  <include package="eea.facetednavigation" file='dexterity.zcml' />
+  <include package="eea.facetednavigation" file='configure.zcml' />
+  <include package="eea.facetednavigation" file='permissions.zcml' />
+  <include package="eea.facetednavigation" file='meta.zcml'      />
+  <includeOverrides package="eea.facetednavigation" file='overrides.zcml' />
+  <include package="eea.facetednavigation" file='configure.zcml' />
+  <include package="eea.facetednavigation" file='dexterity.zcml' />
+  <include package="eea.facetednavigation" file='configure.zcml' />
+  <include package="eea.facetednavigation" file='permissions.zcml' />
+  <!--<includeOverrides package="eea.facetednavigation" file="overrides.zcml"-->
   <include package="eea.tags" file="configure.zcml"/>
   <!--with_ploneproduct_plomino -->
+  <!--with_ploneproduct_plominotinymce -->
+  <include package="plomino.tinymce" file="configure.zcml"/>
   <include package="Products.CMFPlomino" file="configure.zcml"/>
   <!--with_ploneproduct_pacaching -->
   <include package="plone.app.caching" file="configure.zcml"/>
   <!--with_ploneproduct_cgallery -->
   <include package="collective.gallery" file="configure.zcml"/>
-  <!--with_ploneproduct_eeadaviz -->
+  <include package="eea.relations" file="configure.zcml"/>
+  <include package="eea.relations.default" file="configure.zcml"/>
   <include package="eea.daviz" file="configure.zcml"/>
   <!--<includeOverrides package="eea.daviz[full]" file="overrides.zcml"-->
   <include package="eea.daviz" file="full.zcml"/>
