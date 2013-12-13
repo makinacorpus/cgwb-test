@@ -27,8 +27,12 @@ def test_suite():
     try:
         files = []
         for e in ['*rst', '*txt']:
-            for d in [cwd, os.path.dirname(cwd)]:
-                files += glob.glob(os.path.join(d, e))
+            uplevel = os.path.dirname(cwd)
+            for d in [cwd, uplevel]:
+                files += [a for a in
+                          glob.glob(os.path.join(d, e))
+                          if a != os.path.join(
+                              uplevel, 'version.txt')]
     except Exception:
         logger.warn('No doctests for test.cgwb')
     suite = unittest.TestSuite()

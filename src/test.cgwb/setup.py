@@ -62,6 +62,7 @@ setup(
         "collective.js.galleria",
         "collective.galleria",
         # with_ploneproduct_eeadaviz
+        "python-dateutil",
         "eea.relations",
         "eea.daviz[full]",
         # with_binding_pil

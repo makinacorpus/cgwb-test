@@ -25,18 +25,8 @@
   <!--with_ploneproduct_eeafn -->
   <!--with_ploneproduct_eeatags -->
   <!--with_ploneproduct_eeadaviz -->
-  <include package="eea.facetednavigation" file='meta.zcml'      />
-  <includeOverrides package="eea.facetednavigation" file='overrides.zcml' />
-  <include package="eea.facetednavigation" file='configure.zcml' />
-  <include package="eea.facetednavigation" file='dexterity.zcml' />
-  <include package="eea.facetednavigation" file='configure.zcml' />
-  <include package="eea.facetednavigation" file='permissions.zcml' />
-  <include package="eea.facetednavigation" file='meta.zcml'      />
-  <includeOverrides package="eea.facetednavigation" file='overrides.zcml' />
-  <include package="eea.facetednavigation" file='configure.zcml' />
-  <include package="eea.facetednavigation" file='dexterity.zcml' />
-  <include package="eea.facetednavigation" file='configure.zcml' />
-  <include package="eea.facetednavigation" file='permissions.zcml' />
+  <include package="eea.facetednavigation" file="meta.zcml"/>
+  <include package="eea.facetednavigation" file="configure.zcml"/>
   <!--<includeOverrides package="eea.facetednavigation" file="overrides.zcml"-->
   <include package="eea.tags" file="configure.zcml"/>
   <!--with_ploneproduct_plomino -->
@@ -48,7 +38,6 @@
   <!--with_ploneproduct_cgallery -->
   <include package="collective.gallery" file="configure.zcml"/>
   <include package="eea.relations" file="configure.zcml"/>
-  <include package="eea.relations.default" file="configure.zcml"/>
   <include package="eea.daviz" file="configure.zcml"/>
   <!--<includeOverrides package="eea.daviz[full]" file="overrides.zcml"-->
   <include package="eea.daviz" file="full.zcml"/>

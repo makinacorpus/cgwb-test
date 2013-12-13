@@ -1,6 +1,8 @@
 #import unittest2 as unittest
 import os
 import transaction
+import random
+import socket
 #import ConfigParser
 #import re
 import sys
@@ -57,6 +59,20 @@ cwd = os.path.dirname(__file__)
 zope.component.provideAdapter(DefaultTraversable, [None])
 
 
+def _get_port():
+    for i in range(10000):
+        port = random.randrange(20000, 30000)
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        try:
+            try:
+                s.connect(('localhost', port))
+            except socket.error:
+                return port
+        finally:
+            s.close()
+    raise RuntimeError("Can't find port")
+
+
 def get_interfaces(obj):
     return [o for o in obj.__provides__.interfaces()]
 
@@ -76,57 +92,6 @@ class Request(zope.publisher.browser.TestRequest):
         self._environ[name] = value
 
 
-class Browser(z2.Browser):  # pragma: no cover
-    """Patch the browser class to be a little more like a webbrowser."""
-
-    def __init__(self, app, url=None, headers=None):
-        if headers is None:
-            headers = []
-        z2.Browser.__init__(self, app, url)
-        self.mech_browser.set_handle_robots(False)
-        for h in headers:
-            k, val = h
-            self.addHeader(k, val)
-        if url is not None:
-            self.open(url)
-
-    def print_contents_to_file(self, dest='~/.browser.html'):
-        fic = open(os.path.expanduser(dest), 'w')
-        fic.write(self.contents)
-        fic.flush()
-        fic.close()
-
-    @property
-    def print_contents(self):
-        """Print the browser contents somewhere for you to see its
-        context in doctest pdb, t
-        ype browser.print_contents(browser) and that's it,
-        open firefox with file://~/browser.html."""
-        self.print_contents_to_file()
-
-    @classmethod
-    def new(cls, url=None, user=None, passwd=None, headers=None, login=False):
-        """instantiate and return a testbrowser for convenience """
-        app = TEST_CGWB_FUNCTIONAL_TESTING['app']
-        portal = TEST_CGWB_FUNCTIONAL_TESTING['portal']
-        if not url:
-            url = portal.absolute_url()
-        if headers is None:
-            headers = []
-        if user:
-            login = True
-        if not user:
-            user = PLONE_MANAGER_NAME
-        if not passwd:
-            passwd = PLONE_MANAGER_PASSWORD
-        if login:
-            auth = 'Basic %s:%s' % (user, passwd)
-            headers.append(('Authorization', auth))
-        headers.append(('User-agent', GENTOO_FF_UA))
-        browser = cls(app, url, headers=headers)
-        return browser
-
-
 TestRequest = Request
 
 
@@ -139,19 +104,19 @@ def make_request(url='http://nohost/@@myview', form=None, *args, **kwargs):
 
 
 class TestCgwbLayer(PloneSandboxLayer):
+    """Layer to setup the cgwb site"""
 
     defaultBases = (PLONE_FIXTURE, )
-    """Layer to setup the cgwb site"""
+
     class Session(dict):
         def set(self, key, value):
             self[key] = value
 
     def setUpZope(self, app, configurationContext):
-        """Set up the additional products required for the test) site cgwb.
+        """Set up the additional products required for the test site cgwb.
         until the setup of the Plone site testing layer.
         """
         self.app = app
-        self.browser = Browser(app)
 
         # ------------------------------------------------------
         # Import all our python modules required by our packages
@@ -249,8 +214,6 @@ class TestCgwbLayer(PloneSandboxLayer):
     def setUpPloneSite(self, portal):
         self.portal = portal
         # Plone stuff. Workflows, portal content. Members folder, etc.
-        self.applyProfile(portal, 'Products.CMFPlone:plone')
-        self.applyProfile(portal, 'Products.CMFPlone:plone-content')
         self.applyProfile(portal, 'test.cgwb:default')
 
 
@@ -258,21 +221,27 @@ TEST_CGWB_FIXTURE = TestCgwbLayer(
     name='TestCgwb:Fixture')
 
 
-class LayerMixin(Layer):
+class IntegrationTesting(BIntegrationTesting):
+
     defaultBases = (
         TEST_CGWB_FIXTURE,
+        z2.INTEGRATION_TESTING,
     )
 
     def testTearDown(self):
         self.loginAsPortalOwner()
         if 'test-folder' in self['portal'].objectIds():
             self['portal'].manage_delObjects('test-folder')
+        # Set up the local site manager
+        from zope.site.hooks import setSite
+        setSite(self['portal'])
         self['portal'].portal_membership.deleteMembers([PLONE_MANAGER_NAME])
         self.setRoles()
         self.login()
-        transaction.commit()
+        super(IntegrationTesting, self).testTearDown()
 
     def testSetUp(self):
+        super(IntegrationTesting, self).testSetUp()
         if not self['portal']['acl_users'].getUser(PLONE_MANAGER_NAME):
             self.loginAsPortalOwner()
             self.add_user(
@@ -288,9 +257,9 @@ class LayerMixin(Layer):
             self['portal'].invokeFactory('Folder', 'test-folder')
         self['test-folder'] = self['folder'] = self['portal']['test-folder']
         self.setRoles(TEST_USER_ROLES)
-        transaction.commit()
         self['globs'] = globals()
         self['globs'].update(locals())
+        self['globs'][Browser] = Browser
 
     def add_user(self, portal, id, username, password, roles=None):
         if not roles:
@@ -323,18 +292,34 @@ class LayerMixin(Layer):
             z2.login(self['portal']['acl_users'], id)
 
 
-class IntegrationTesting(LayerMixin, BIntegrationTesting):
-
-    def testSetUp(self):
-        BIntegrationTesting.testSetUp(self)
-        LayerMixin.testSetUp(self)
+TEST_CGWB_INTEGRATION_TESTING = (
+    IntegrationTesting(name="TestCgwb:Integration")
+)
 
 
-class FunctionalTesting(LayerMixin, BFunctionalTesting):
+class FunctionalTesting(BFunctionalTesting):
 
-    def testSetUp(self):
-        BFunctionalTesting.testSetUp(self)
-        LayerMixin.testSetUp(self)
+    defaultBases = (
+        TEST_CGWB_INTEGRATION_TESTING,
+    )
+
+
+TEST_CGWB_FUNCTIONAL_TESTING = (
+    FunctionalTesting(name="TestCgwb:Functional")
+)
+
+
+class SeleniumTesting(FunctionalTesting):
+
+    defaultBases = (
+        TEST_CGWB_FUNCTIONAL_TESTING,
+        SELENIUM_TESTING,
+    )
+
+
+TEST_CGWB_SELENIUM_TESTING = (
+    SeleniumTesting(name="TestCgwb:Selenium")
+)
 
 
 class SimpleLayer(Layer):
@@ -343,17 +328,62 @@ class SimpleLayer(Layer):
 
 
 TEST_CGWB_SIMPLE = SimpleLayer(
-    name='TestCgwb:Simple')
-TEST_CGWB_INTEGRATION_TESTING = (
-    IntegrationTesting(name="TestCgwb:Integration")
+    name='TestCgwb:Simple'
 )
-TEST_CGWB_FUNCTIONAL_TESTING = (
-    FunctionalTesting(name="TestCgwb:Functional")
-)
-TEST_CGWB_SELENIUM_TESTING = (
-    FunctionalTesting(
-        bases=(SELENIUM_TESTING, TEST_CGWB_FUNCTIONAL_TESTING,),
-        name="TestCgwb:Selenium")
-)
+
+
+class Browser(z2.Browser):  # pragma: no cover
+    """Patch the browser class to be a little more like a webbrowser."""
+
+    def __init__(self, app=None, url=None, headers=None):
+        if not url:
+            url = '/plone'
+        if not url.startswith('http'):
+            host = TEST_CGWB_FUNCTIONAL_TESTING['host']
+            port = TEST_CGWB_FUNCTIONAL_TESTING['port']
+            url = 'http://{0}:{1}/{2}'.format(host, port, url)
+        self.handle_errors = False
+        if headers is None:
+            headers = []
+        if not app:
+            app = z2.INTEGRATION_TESTING['app']
+        super(Browser, self).__init__(app)
+        self.mech_browser.set_handle_robots(0)
+        for h in headers:
+            k, val = h
+            self.addHeader(k, val)
+        if url is not None:
+            self.open(url)
+
+    def print_contents_to_file(self, dest='~/.browser.html'):
+        fic = open(os.path.expanduser(dest), 'w')
+        fic.write(self.contents)
+        fic.flush()
+        fic.close()
+
+    @property
+    def print_contents(self):
+        """Print the browser contents somewhere for you to see its
+        context in doctest pdb, t
+        ype browser.print_contents(browser) and that's it,
+        open firefox with file://~/browser.html."""
+        self.print_contents_to_file()
+
+    @classmethod
+    def new(cls, url=None, user=None, passwd=None, headers=None, login=False):
+        """instantiate and return a testbrowser for convenience """
+        if headers is None:
+            headers = []
+        if user:
+            login = True
+        if not user:
+            user = PLONE_MANAGER_NAME
+        if not passwd:
+            passwd = PLONE_MANAGER_PASSWORD
+        if login:
+            auth = 'Basic %s:%s' % (user, passwd)
+            headers.append(('Authorization', auth))
+        headers.append(('User-agent', GENTOO_FF_UA))
+        return cls(z2.INTEGRATION_TESTING['app'], url=url, headers=headers)
 
 # vim:set ft=python:
