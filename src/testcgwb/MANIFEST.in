@@ -1,4 +1,0 @@
-include *.txt *.cfg *.rst .coveragerc
-recursive-include docs *
-recursive-include src/testcgwb *
-global-exclude *pyc

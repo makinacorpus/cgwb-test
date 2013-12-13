@@ -1,8 +1,0 @@
-[run]
-branch = True
-source =
-    src/testcgwb
-omit=
-    src/testcgwb/tests/**/*.py
-    src/testcgwb/tests/*.py
-    src/testcgwb/testing.py

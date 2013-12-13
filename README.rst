@@ -1,14 +1,14 @@
 ==============================================================
-BUILDOUT FOR testcgwb DOCUMENTATION
+BUILDOUT FOR jpcw DOCUMENTATION
 ==============================================================
 
 INSTALLING THIS PROJECT
 -----------------------------------------
 ::
 
-    cd testcgwb
+    cd jpcw
     mkdir workdir
-    git clone git@gitorious-git.makina-corpus.net/ testcgwb
+    git clone ssh://git@github.com:orga/project.git jpcw
     sudo apt-get install -y build-essential m4 libtool pkg-config autoconf gettext bzip2 groff man-db automake libsigc++-2.0-dev tcl8.5 git libssl-dev libxml2-dev libxslt1-dev libbz2-dev zlib1g-dev python-setuptools python-dev libjpeg62-dev libreadline-dev python-imaging wv poppler-utils libsqlite0-dev libgdbm-dev libdb-dev tcl8.5-dev tcl8.5-dev tcl8.4 tcl8.4-dev tk8.5-dev libsqlite3-dev
 
 Run buildout::
@@ -44,7 +44,7 @@ BASE BUILDOUTS WHICH DO ONLY SCHEDULE PARTS FROM THERE & THERE
 
 PROJECT Files
 ~~~~~~~~~~~~~~~~~~~~~~~~
-- Think you have the most important sections of this buildout configuration in etc/testcgwb.cfg
+- Think you have the most important sections of this buildout configuration in etc/jpcw.cfg
 Set the project developement  specific settings there
 ::
 
@@ -61,7 +61,9 @@ SYSTEM ADMINISTRATORS RELATED FILES
     etc/init.d/                 -> various init script (eg supervisor)
     etc/logrotate.d/            -> various logrotate configuration files
     etc/sys/
+    |-- cache.cfg        -> Project proxy cache settings (varnish)
     |-- ha.cfg           -> Project loadbalancer settings
+    |-- supervisor.cfg   -> Project production settings for supervision
     |-- system.cfg       -> Project settings for reverse proxies, cron & logrotation
 
 We generate two virtualhosts for a cliassical apache or nginxsetup, mostly ready but feel free to copy/adapt.
@@ -77,7 +79,9 @@ CONFIGURATION TEMPLATES
 
     etc/templates/
     |-- ha/balancer.conf.template   -> haproxy template.
+    |-- varnish                     -> varnish related templates (binaries helpers & vcl)
     |-- logrotate.conf.template     -> logrotate configuration file template for your Zope logs
     |-- www                         -> templates for www proxies
+    `-- supervisor/supervisor.initd -> template for supervisor init script
 
 .. vim:set ft=rst:

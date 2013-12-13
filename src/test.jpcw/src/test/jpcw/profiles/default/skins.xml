@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<object name="portal_skins" allow_any="False" cookie_persistence="False" default_skin="test.jpcw">
+
+  <object name="test_jpcw_custom"
+      meta_type="Filesystem Directory View"
+      directory="test.jpcw:skins/test_jpcw_custom"/>
+  <skin-path name="test.jpcw" based-on="Sunburst Theme">
+    <layer name="test_jpcw_custom"
+        insert-after="custom"/>
+  </skin-path>
+
+</object>

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 cd $(dirname $0)/..
-IMPORT_URL="git@gitorious-git.makina-corpus.net/"
-PROJECT="testcgwb"
+IMPORT_URL="ssh://git@github.com:orga/project.git"
+PROJECT="jpcw"
 GITORIOUS=""
 GDOT="."
 if [[ $(echo "$IMPORT_URL"|sed -re "s/.*gitorious.*/match/g") == "match" ]];then
