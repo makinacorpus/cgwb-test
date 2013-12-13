@@ -13,7 +13,7 @@ etc/init.d/
 etc/loadbalancing/
 etc/logrotate.conf
 etc/project/kgs.cfg
-etc/project/jpcw-kgs.cfg
+etc/project/cgwb-kgs.cfg
 etc/sys/settings-local.cfg
 etc/sys/settings-prod.cfg
 etc/varnish.vcl
@@ -29,4 +29,4 @@ var/log/instance?.log
 !eggs/*.empty
 !etc/sys
 !src/zopelib
-!src/*jpcw*
+!src/*cgwb*

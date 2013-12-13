@@ -1,5 +1,0 @@
-<?xml version="1.0"?>
-<layers>
-  <layer remove="true" name="test.jpcw-theme" interface="test.jpcw.interfaces.IThemeSpecific"/>
-  <layer remove="true" name="test.jpcw" interface="test.jpcw.interfaces.ILayer"/>
-</layers>
