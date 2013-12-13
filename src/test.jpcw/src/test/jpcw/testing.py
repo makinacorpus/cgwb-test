@@ -41,6 +41,8 @@ from plone.app.testing.selenium_layers import (
 )
 
 TESTED_PRODUCTS = (
+#with_ploneproduct_eeadaviz
+    'eea.relations',
 )
 
 PLONE_MANAGER_NAME = 'Plone_manager'
