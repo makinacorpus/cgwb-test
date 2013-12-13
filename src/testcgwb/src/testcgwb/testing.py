@@ -71,24 +71,40 @@ class TestcgwbLayer(PloneSandboxLayer):
         # ----------------------------------------------------------------------
         # Import all our python modules required by our packages
         # ---------------------------------------------------------------------
-        #with_ploneproduct_pacaching
-        import plone.app.caching
-        self.loadZCML('configure.zcml', package=plone.app.caching)
-        #with_ploneproduct_eeatags
-        import eea.tags
-        self.loadZCML('configure.zcml', package=eea.tags)
-        #with_ploneproduct_eeadaviz
-        import eea.daviz
-        self.loadZCML('configure.zcml', package=eea.daviz)
-        import eea.tags
-        self.loadZCML('configure.zcml', package=eea.tags)
-        import collective.addthis
-        self.loadZCML('configure.zcml', package=collective.addthis)
-        import plone.app.caching
-        self.loadZCML('configure.zcml', package=plone.app.caching)
+
+        import plone.app.dexterity
+        self.loadZCML('configure.zcml', package=plone.app.dexterity)
+        import plone.app.theming
+        self.loadZCML('configure.zcml', package=plone.app.theming)
+        import plone.app.themingplugins
+        self.loadZCML('configure.zcml', package=plone.app.themingplugins)
+
         #with_ploneproduct_addthis
         import collective.addthis
         self.loadZCML('configure.zcml', package=collective.addthis)
+        #with_ploneproduct_galleria
+        import collective.galleria
+        self.loadZCML('configure.zcml', package=collective.galleria)
+        #with_ploneproduct_eeadaviz
+        import eea.daviz
+        self.loadZCML('configure.zcml', package=eea.daviz)
+        #with_ploneproduct_cpembed
+        import collective.portlet.embed
+        self.loadZCML('configure.zcml', package=collective.portlet.embed)
+        #with_ploneproduct_cgallery
+        import collective.gallery
+        self.loadZCML('configure.zcml', package=collective.gallery)
+        #with_ploneproduct_oembed
+        import collective.oembed
+        self.loadZCML('configure.zcml', package=collective.oembed)
+        import collective.portlet.oembed
+        self.loadZCML('configure.zcml', package=collective.portlet.oembed)
+        import eea.tags
+        self.loadZCML('configure.zcml', package=eea.tags)
+        import plone.app.caching
+        self.loadZCML('configure.zcml', package=plone.app.caching)
+        #with_ploneproduct_pacaching
+        #with_ploneproduct_eeatags
 
         # -----------------------------------------------------------------------
         # Load our own testcgwb

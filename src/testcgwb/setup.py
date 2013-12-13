@@ -55,17 +55,28 @@ setup(
         "plone.app.referenceablebehavior",
         "plone.directives.dexterity",
         "plone.directives.form",
-        # with_ploneproduct_pacaching
-        "plone.app.caching",
-        # with_binding_pil
-        "Pillow",
-        # with_ploneproduct_eeatags
-        "eea.tags",
+        "plone.app.theming",
+        "plone.app.themingplugins",
+        # with_ploneproduct_addthis
+        "collective.addthis",
+        # with_ploneproduct_galleria
+        "collective.galleria",
         # with_ploneproduct_eeadaviz
         "eea.daviz[full]",
         "eea.relations",
-        # with_ploneproduct_addthis
-        "collective.addthis",
+        # with_binding_pil
+        "Pillow",
+        # with_ploneproduct_cpembed
+        "collective.portlet.embed",
+        # with_ploneproduct_cgallery
+        "collective.gallery",
+        # with_ploneproduct_oembed
+        "collective.oembed",
+        "collective.portlet.oembed",
+        # with_ploneproduct_pacaching
+        "plone.app.caching",
+        # with_ploneproduct_eeatags
+        "eea.tags",
         # -*- Extra requirements: -*-
     ],
     extras_require={

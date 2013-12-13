@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 PROJECT="testcgwb"
-IMPORT_URL="git@gitorious-git.makina-corpus.net/"
+IMPORT_URL="ssh://git@github.com:orga/project.git"
 cd $(dirname $0)/..
 [[ ! -d t ]] && mkdir t
 rm -rf t/*

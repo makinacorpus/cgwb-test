@@ -42,7 +42,5 @@
     <depends name="plone-content"/>
   </genericsetup:importStep>
   <!-- -->
-  <utility factory="testcgwb.HiddenProducts" name="testcgwb.hiddenproducts"/>
-  <utility factory="testcgwb.HiddenProfiles" name="testcgwb.hiddenprofiles"/>
   <include package=".upgrades"/>
 </configure>
