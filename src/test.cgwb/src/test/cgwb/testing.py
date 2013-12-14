@@ -364,9 +364,9 @@ class Browser(z2.Browser):  # pragma: no cover
     @property
     def print_contents(self):
         """Print the browser contents somewhere for you to see its
-        context in doctest pdb, t
-        ype browser.print_contents(browser) and that's it,
-        open firefox with file://~/browser.html."""
+        context in doctest pdb,
+        Then browser.print_contents(browser) and that's it,
+        Open firefox with file://~/browser.html."""
         self.print_contents_to_file()
 
     @classmethod
