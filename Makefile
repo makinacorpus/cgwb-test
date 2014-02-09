@@ -1,12 +1,12 @@
-# Makefile for javascript resources
+# Makefile for javascript & css resources
 PATH_BASE=$(PWD)
 PATH := $(PWD)/node_modules/.bin:$(PWD)/bin:$(PATH)
 B=node_modules/.bin/
 
 all: buildout resources
 
-$(B)/buildout:
-	python bootstrap.py
+bin/buildout:
+	python bootstrap.py -c buildout-dev.cfg
 
 bin/npm: bin/buildout
 	bin/buildout -c buildout-dev.cfg install nodejs
