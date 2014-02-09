@@ -23,9 +23,10 @@
   <!--
     <stylesheet id="++resource++test.cgwb/something.css"/>
     -->
-  <stylesheet applyPrefix="True" title="" id="++theme++test.cgwb/css/960_12_col.css" />
-  <stylesheet applyPrefix="True" title="" id="++theme++test.cgwb/css/project.css"
-      expression="request/HTTP_X_THEME_ENABLED | nothing" />
+
+  <stylesheet applyPrefix="True" title="" id="++theme++test.cgwb/css/theme.min.css"
+    expression="request/HTTP_X_THEME_ENABLED | nothing" />
   <stylesheet applyPrefix="True" title="" id="columns.css"
       expression="not:request/HTTP_X_THEME_ENABLED | nothing" />
+  <stylesheet id="mobile.css"  enabled="False" />
 </object>
