@@ -7,6 +7,11 @@ fi
 if [[ -z $no_clean ]];then
     rm -rf .installed.cfg downloads/ .mr.developer.cfg parts/ bin/ develop-eggs/ eggs/*egg
 fi
-touch etc/sys/settings-local.cfg
 git checkout etc/project/versions.cfg
+cat > etc/sys/settings-local.cfg << EOF
+[hosts]
+zope-front = \${hosts:instance}
+[ports]
+zope-front = \${ports:instance} 
+EOF
 
