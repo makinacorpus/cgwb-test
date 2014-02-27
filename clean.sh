@@ -7,6 +7,7 @@ fi
 if [[ -z $no_clean ]];then
     rm -rf .installed.cfg downloads/ .mr.developer.cfg parts/ bin/ develop-eggs/ eggs/*egg
 fi
+git checkout etc/cache
 git checkout etc/project/versions.cfg
 cat > etc/sys/settings-local.cfg << EOF
 [hosts]

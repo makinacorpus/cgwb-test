@@ -1,5 +1,5 @@
 <VirtualHost ${listen}:${port}>
-ServerAdmin     kiorky@localhost
+ServerAdmin     ${v:reverse-proxy-admin}
 DocumentRoot    ${buildout:directory}/www/htdocs/
 ServerName      ${host}
 ErrorLog        ${buildout:directory}/var/log/apache/${host}_log
@@ -59,7 +59,7 @@ ${extra}
 
 </VirtualHost>
 <VirtualHost ${listen}:${port}>
-ServerAdmin     kiorky@localhost
+ServerAdmin     ${v:reverse-proxy-admin}
 DocumentRoot    ${buildout:directory}/www/htdocs
 ServerName      ${edit-host}
 ErrorLog        ${buildout:directory}/var/log/apache/${edit-host}_log
